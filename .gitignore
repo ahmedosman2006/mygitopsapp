@@ -4,6 +4,7 @@
 ## Get latest from `dotnet new gitignore`
 
 # dotenv files
+
 .env
 
 # User-specific files
@@ -20,6 +21,8 @@
 mono_crash.*
 
 # Build results
+bin/
+obj/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
