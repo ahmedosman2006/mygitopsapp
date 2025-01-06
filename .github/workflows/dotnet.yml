@@ -2,11 +2,7 @@ name: Build Solution and Generate Artifacts on Pull Request
  
 on:
 
-  pull_request:
-
-    branches:
-
-      - main  # Adjust to the target branch you want to monitor
+ workflow_dispatch:
  
 jobs:
 
