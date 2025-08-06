@@ -1,0 +1,32 @@
+name: Build Solution and Generate Artifacts
+
+on:
+  workflow_dispatch:  # Manual trigger via GitHub UI
+
+jobs:
+  build-solution-and-generate-artifacts:
+    runs-on: windows-latest  # GitHub-hosted Windows agent
+
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v3
+
+      - name: 🧰 Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.0'
+
+      - name: 🔄 Restore Dependencies
+        run: dotnet restore myopsapp.sln
+
+      - name: 🏗️ Build Solution
+        run: dotnet build myopsapp.sln --configuration Release --no-restore --verbosity detailed
+
+      - name: 📦 Publish .NET API
+        run: dotnet publish ./myopsapp.csproj.csproj -c Release -o ./publish
+
+      - name: 🚀 Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dotnet-api-artifact
+          path: ./publish
