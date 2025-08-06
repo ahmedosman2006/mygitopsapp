@@ -1,0 +1,45 @@
+name: 🚀 Deploy to On-Prem Server (Manual)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy Artifact to On-Prem IIS
+    runs-on: self-hosted
+
+    env:
+      IIS_PATH: C:\inetpub\wwwroot\MyApi
+      BACKUP_ROOT: C:\Backups\MyApi
+      APP_POOL_NAME: MyApiAppPool
+
+    steps:
+      - name: 📥 Download Published Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dotnet-api-artifact
+          path: C:\Deploy\MyApi
+
+      - name: 🧼 Backup Current Site Files
+        run: |
+          $timestamp = Get-Date -Format "yyyy-MM-dd_HHmm"
+          $backupPath = "${{ env.BACKUP_ROOT }}_$timestamp"
+          New-Item -ItemType Directory -Path $backupPath -Force
+          Copy-Item -Path "${{ env.IIS_PATH }}\*" -Destination $backupPath -Recurse -Force
+        shell: pwsh
+
+      - name: 🧹 Clean Previous Deployment
+        run: |
+          Remove-Item -Recurse -Force "${{ env.IIS_PATH }}\*" -ErrorAction SilentlyContinue
+        shell: pwsh
+
+      - name: 📤 Copy New Files to IIS Folder
+        run: |
+          Copy-Item -Path "C:\Deploy\MyApi\*" -Destination "${{ env.IIS_PATH }}" -Recurse -Force
+        shell: pwsh
+
+      - name: 🔁 Restart Application Pool
+        run: |
+          Import-Module WebAdministration
+          Restart-WebAppPool -Name "${{ env.APP_POOL_NAME }}"
+        shell: pwsh
