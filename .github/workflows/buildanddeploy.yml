@@ -64,22 +64,17 @@ jobs:
           Remove-Item -Recurse -Force "${{ env.IIS_PATH }}\*" -ErrorAction SilentlyContinue
         shell: pwsh
 
-      - name: ⛔ Stop App Pool (before file copy)
+      - name: ⛔ Stop App Pool
         run: |
-          Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
-          Import-Module WebAdministration
-          Stop-WebAppPool -Name "${{ env.APP_POOL_NAME }}"
-        shell: powershell
+          & "$env:SystemRoot\System32\inetsrv\appcmd.exe" stop apppool /apppool.name:"${{ env.APP_POOL_NAME }}"
+        shell: pwsh
 
-      - name: 📤 Copy New Files to IIS Folder
+      - name: 📤 Copy New Files
         run: |
           Copy-Item -Path "C:\Deploy\MyApi\*" -Destination "${{ env.IIS_PATH }}" -Recurse -Force
         shell: pwsh
 
-      - name: 🔁 Start Application Pool
+      - name: ▶️ Start App Pool
         run: |
-          Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
-          Import-Module WebAdministration
-          Start-WebAppPool -Name "${{ env.APP_POOL_NAME }}"
-        shell: powershell
-
+          & "$env:SystemRoot\System32\inetsrv\appcmd.exe" start apppool /apppool.name:"${{ env.APP_POOL_NAME }}"
+        shell: pwsh
