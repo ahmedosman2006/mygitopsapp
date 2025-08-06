@@ -35,6 +35,8 @@ jobs:
     name: Deploy Artifact to On-Prem IIS
     runs-on: self-hosted
     needs: build
+    environment:
+      name: on-prem-deploy
 
     env:
       IIS_PATH: C:\inetpub\wwwroot\MyApi
@@ -62,14 +64,20 @@ jobs:
           Remove-Item -Recurse -Force "${{ env.IIS_PATH }}\*" -ErrorAction SilentlyContinue
         shell: pwsh
 
+      - name: ⛔ Stop App Pool (before file copy)
+        run: |
+          Import-Module WebAdministration
+          Stop-WebAppPool -Name "${{ env.APP_POOL_NAME }}"
+        shell: pwsh
+
       - name: 📤 Copy New Files to IIS Folder
         run: |
           Copy-Item -Path "C:\Deploy\MyApi\*" -Destination "${{ env.IIS_PATH }}" -Recurse -Force
         shell: pwsh
 
-      - name: 🔁 Restart Application Pool
+      - name: 🔁 Start Application Pool
         run: |
           Import-Module WebAdministration
-          Restart-WebAppPool -Name "${{ env.APP_POOL_NAME }}"
+          Start-WebAppPool -Name "${{ env.APP_POOL_NAME }}"
         shell: pwsh
 
