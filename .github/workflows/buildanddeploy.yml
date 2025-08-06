@@ -68,7 +68,7 @@ jobs:
         run: |
           Import-Module WebAdministration
           Stop-WebAppPool -Name "${{ env.APP_POOL_NAME }}"
-        shell: pwsh
+        shell: powershell
 
       - name: 📤 Copy New Files to IIS Folder
         run: |
@@ -79,5 +79,5 @@ jobs:
         run: |
           Import-Module WebAdministration
           Start-WebAppPool -Name "${{ env.APP_POOL_NAME }}"
-        shell: pwsh
+        shell: powershell
 
