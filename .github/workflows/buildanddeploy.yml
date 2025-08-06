@@ -66,6 +66,7 @@ jobs:
 
       - name: ⛔ Stop App Pool (before file copy)
         run: |
+          Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
           Import-Module WebAdministration
           Stop-WebAppPool -Name "${{ env.APP_POOL_NAME }}"
         shell: powershell
@@ -77,6 +78,7 @@ jobs:
 
       - name: 🔁 Start Application Pool
         run: |
+          Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
           Import-Module WebAdministration
           Start-WebAppPool -Name "${{ env.APP_POOL_NAME }}"
         shell: powershell
