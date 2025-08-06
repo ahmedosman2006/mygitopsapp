@@ -23,7 +23,7 @@ jobs:
         run: dotnet build myopsapp.sln --configuration Release --no-restore --verbosity detailed
 
       - name: 📦 Publish .NET API
-        run: dotnet publish ./myopsapp.csproj.csproj -c Release -o ./publish
+        run: dotnet publish ./myopsapp.csproj -c Release -o ./publish
 
       - name: 🚀 Upload Artifact
         uses: actions/upload-artifact@v4
