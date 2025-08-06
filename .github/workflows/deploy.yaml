@@ -21,6 +21,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: dotnet-api-artifact
+          run-id: ${{ github.event.workflow_run.id }}
           path: C:\Deploy\MyApi
 
       - name: 🧼 Backup Current Site Files
