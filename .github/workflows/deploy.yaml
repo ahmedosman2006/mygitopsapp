@@ -1,7 +1,10 @@
 name: 🚀 Deploy to On-Prem Server (Manual)
 
 on:
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["Build Solution and Generate Artifacts"]
+    types:
+      - completed
 
 jobs:
   deploy:
