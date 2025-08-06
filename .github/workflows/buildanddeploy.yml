@@ -4,7 +4,7 @@ on:
   workflow_dispatch:  # Manual trigger via GitHub UI
 
 jobs:
-  build-solution-and-generate-artifacts:
+  build:
     runs-on: windows-latest  # GitHub-hosted Windows agent
 
     steps:
@@ -34,6 +34,7 @@ jobs:
   deploy:
     name: Deploy Artifact to On-Prem IIS
     runs-on: self-hosted
+    needs: build
 
     env:
       IIS_PATH: C:\inetpub\wwwroot\MyApi
